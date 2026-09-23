@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: doctorapp
+      POSTGRES_PASSWORD: doctorapp
+      POSTGRES_DB: doctorapp
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  api:
+    build: .
+    restart: always
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://doctorapp:doctorapp@db:5432/doctorapp
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+      PORT: 4000
+    ports:
+      - "4000:4000"
+
+volumes:
+  db_data:
