@@ -1,0 +1,31 @@
+name: Backend Build
+
+"on":
+  workflow_dispatch: {}
+  push:
+    branches: ["main"]
+    paths:
+      - "backend/**"
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "backend/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        working-directory: backend
+        run: npm install
+
+      - name: Syntax check
+        working-directory: backend
+        run: node -c src/index.js
